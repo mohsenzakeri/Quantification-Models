@@ -8,7 +8,6 @@ data {
  int columns[Q]; // weight vector column indicator
  int row_starts[N+1]; // weight vector row starts
  vector[N] counts; // number of fragments in each eq class
- vector[N] y; // Outcome
 }
 
 parameters {

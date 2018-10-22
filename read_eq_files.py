@@ -1,4 +1,6 @@
 import csv
+import pystan
+
 
 def read_eq_classes_file(file_name):
     eq_classes_file = open(file_name, "r")
@@ -35,22 +37,27 @@ def read_eq_classes_file(file_name):
     print(len(row_starts))
     print(len(counts))
 
-    #with open("weights.csv", 'w', newline='') as myfile:
-    #    wr = csv.writer(myfile)
-    #    wr.writerow(weights)
+    '''with open("weights.csv", 'w', newline='') as myfile:
+        wr = csv.writer(myfile)
+        wr.writerow(weights)
 
-    #with open("columns.csv", 'w', newline='') as myfile:
-    #    wr = csv.writer(myfile)
-    #    wr.writerow(columns)
+    with open("columns.csv", 'w', newline='') as myfile:
+        wr = csv.writer(myfile)
+        wr.writerow(columns)
 
-    #with open("row_starts.csv", 'w', newline='') as myfile:
-    #    wr = csv.writer(myfile)#, quoting=csv.QUOTE_ALL)
-    #    wr.writerow(row_starts)
+    with open("row_starts.csv", 'w', newline='') as myfile:
+        wr = csv.writer(myfile)#, quoting=csv.QUOTE_ALL)
+        wr.writerow(row_starts)
 
     with open("counts.csv", 'w', newline='') as myfile:
         wr = csv.writer(myfile)#, quoting=csv.QUOTE_ALL)
-        wr.writerow(counts)
+        wr.writerow(counts)'''
 
+    stan_model = pystan.StanModel(file='stan_model_eq_classes.stan')
+    stan_data = { 'weights' : weights, 'columns' : columns, 'row_starts' : row_starts, 'counts' : counts, 'N' : len(counts), 'Q' : len(weights), 'M' : txps_count}
+
+    fit = stan_model.sampling(data=stan_data, iter=1000, chains=4)
+ 
 
 def main():
     read_eq_classes_file("eq_classes.txt")   
