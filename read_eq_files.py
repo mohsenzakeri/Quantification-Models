@@ -1,10 +1,14 @@
 import csv
+import os
 import pystan
+
+
+os.environ['STAN_NUM_THREADS'] = "4"
 
 
 def read_eq_classes_file(file_name):
     eq_classes_file = open(file_name, "r")
-    
+
     txps_count = int(eq_classes_file.readline())
     eq_classes_count = int(eq_classes_file.readline())
 
@@ -21,7 +25,7 @@ def read_eq_classes_file(file_name):
     columns = list()
     row_starts = list()
     counts = list()
-    
+
     row_starts += [1]
     for i in range(eq_classes_count):
         eq_class_info = eq_classes_file.readline().split()
@@ -29,7 +33,7 @@ def read_eq_classes_file(file_name):
         for j in range(class_size):
             columns += [int(eq_class_info[j+1])]
             weights += [float(eq_class_info[j+class_size+1])]
-        row_starts += [int(row_starts[i])+class_size]        
+        row_starts += [int(row_starts[i])+class_size]
         counts += [int(eq_class_info[-1])]
 
     print(len(weights))
@@ -56,11 +60,13 @@ def read_eq_classes_file(file_name):
     stan_model = pystan.StanModel(file='stan_model_eq_classes.stan')
     stan_data = { 'weights' : weights, 'columns' : columns, 'row_starts' : row_starts, 'counts' : counts, 'N' : len(counts), 'Q' : len(weights), 'M' : txps_count}
 
-    fit = stan_model.sampling(data=stan_data, iter=1000, chains=4)
- 
+    fit = stan_model.sampling(data=stan_data, iter=1000, n_jobs = 4)
+    print(fit)
+    print(fit.extract(permuted=False))
+
 
 def main():
-    read_eq_classes_file("eq_classes.txt")   
+    read_eq_classes_file("eq_classes.txt")
 
 if __name__=="__main__":
     main()

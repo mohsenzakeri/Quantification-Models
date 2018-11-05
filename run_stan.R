@@ -8,7 +8,7 @@ require("reticulate")
 
 #stan_data <- list(weights = weights, columns = columns, row_starts = row_starts, counts = counts)
 
-source_python("/home/mohsen/pickle_reader.py")
+source_python("pickle_reader.py")
 
 stan_model <- "stan_model_eq_classes_working.stan"
 stan_data <- read_pickle_file("/home/mohsen/stan_data_small.p")
