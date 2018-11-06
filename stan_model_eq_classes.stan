@@ -15,7 +15,7 @@ parameters{
 
 transformed parameters {
     vector[N] likelihood; 
-    likelihood = csr_matrix_times_vector(N, M, weights, columns, row_starts, theta) .* counts;
+    likelihood = csr_matrix_times_vector(N, M, weights, columns, row_starts, theta);
 }
 
 model{
