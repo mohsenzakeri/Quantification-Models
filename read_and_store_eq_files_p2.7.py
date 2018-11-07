@@ -31,11 +31,10 @@ for i in range(eq_classes_count):
 		effLenProb = 1/effLens[int(eq_class_info[j+1])]
 		class_weights += [float(eq_class_info[j+class_size+1])*effLenProb]
 		wsum += class_weights[j]
-		weights += [float(eq_class_info[j+class_size+1])]
 	wnorm = 1.0/wsum
 	for q in range(len(class_weights)):
 		new_weight = class_weights[q]*wnorm
-		#weights += [float(new_weight)]
+		weights += [float(new_weight)]
 	row_starts += [int(row_starts[i])+class_size]
 	counts += [int(eq_class_info[-1])]
 
